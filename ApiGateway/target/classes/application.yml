@@ -1,0 +1,33 @@
+server:
+  port: 8060
+spring:
+  application:
+    name: ApiGateway
+  cloud:
+    gateway:
+        routes:
+          - id: PlaneService
+            uri: lb://PlaneService
+            predicates:
+            - Path=/plane/**
+            filters:
+              - AuthenticationFilter
+              
+          - id: SECURITYSERVER
+            uri: lb://SECURITYSERVER
+            predicates:
+            - Path=/auth/**
+            
+            
+          - id: Companyservice
+            uri: lb://companyservice
+            predicates:
+            - Path=/company/**
+            filters:
+              - AuthenticationFilter
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
